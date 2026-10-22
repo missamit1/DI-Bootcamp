@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Currency Converter</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <main>
+    <h1>Currency Converter</h1>
+    <form id="key-form">
+      <label for="api-key">ExchangeRate-API key</label>
+      <div class="row">
+        <input id="api-key" type="password" autocomplete="off" required placeholder="Enter your API key">
+        <button type="submit">Load currencies</button>
+      </div>
+      <p class="hint">Your key is used only for this session. <a href="https://app.exchangerate-api.com/sign-up" target="_blank" rel="noopener noreferrer">Get a free key</a>.</p>
+    </form>
+    <form id="converter-form">
+      <fieldset id="controls" disabled>
+        <label for="from">From</label>
+        <select id="from" required></select>
+        <button id="switch" type="button" aria-label="Switch currencies">⇅</button>
+        <label for="to">To</label>
+        <select id="to" required></select>
+        <label for="amount">Amount</label>
+        <input id="amount" type="number" min="0" step="any" value="1" required>
+        <button type="submit" class="convert">Convert</button>
+      </fieldset>
+    </form>
+    <p id="status" role="status" aria-live="polite">Enter your API key to load currencies.</p>
+    <output id="result" aria-live="polite"></output>
+    <p id="rate"></p>
+  </main>
+</body>
+</html>
