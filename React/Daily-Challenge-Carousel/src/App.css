@@ -1,0 +1,8 @@
+body { margin: 0; background: #f6f7f9; color: #202c3e; }
+.travel-carousel { max-width: 680px; }
+.travel-carousel .slide img { aspect-ratio: 5 / 4; object-fit: cover; }
+.travel-carousel .carousel-slider { border-radius: 10px; }
+.travel-carousel .carousel .legend { font-size: 18px; opacity: 1; background: #111c2ce6; }
+.travel-carousel .carousel .thumbs { padding-left: 0; }
+.travel-carousel .carousel .thumb img { aspect-ratio: 5 / 4; object-fit: cover; }
+.travel-carousel .carousel .carousel-status { background: #111c2cbf; border-radius: 4px; margin: 6px; padding: 4px 8px; }
