@@ -1,0 +1,32 @@
+const { test } = require('node:test');
+const assert = require('node:assert/strict');
+const request = require('supertest');
+const { newDb } = require('pg-mem');
+const { createApp } = require('../server.js');
+
+test('database-backed routes and error handling', async (t) => {
+  const db = newDb().adapters.createKnex();
+  t.after(() => db.destroy());
+  await require('../migrations/001_create_posts').up(db);
+  const app = createApp(db);
+  const data = {"title": "First post", "content": "Hello"};
+  assert.deepEqual((await request(app).get('/posts').expect(200)).body, []);
+  const created = (await request(app).post('/posts').send(data).expect(201)).body;
+  assert.equal(created.id, 1);
+  assert.equal((await db('posts').first()).title, data.title);
+  assert.equal((await request(app).get('/posts/1').expect(200)).body.title, data.title);
+  assert.equal((await request(app).get('/posts').expect(200)).body.length, 1);
+  await request(app).get('/posts/999').expect(404);
+  await request(app).get('/posts/bad').expect(400);
+  await request(app).post('/posts').send({}).expect(400);
+  await request(app).post('/posts').set('Content-Type', 'application/json').send('{broken').expect(400);
+  await request(app).get('/missing').expect(404);
+  await request(app).put('/posts/1').send({ title: 'Updated', content: 'New content' }).expect(200);
+  assert.equal((await db('posts').first()).title, 'Updated');
+  await request(app).put('/posts/999').send(data).expect(404);
+  await request(app).delete('/posts/1').expect(204);
+  assert.equal((await db('posts')).length, 0);
+  await request(app).delete('/posts/1').expect(404);
+  await db.schema.dropTable('posts');
+  assert.deepEqual((await request(app).get('/posts').expect(500)).body, { error: 'Internal server error' });
+});
