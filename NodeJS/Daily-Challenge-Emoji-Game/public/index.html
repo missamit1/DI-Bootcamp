@@ -1,0 +1,7 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Emoji Guessing Game</title><link rel="stylesheet" href="style.css"><script src="app.js" defer></script></head>
+<body><main><h1>Emoji Guessing Game</h1><p>One emoji. Four choices. Make your guess!</p>
+<form id="start"><label for="name">Player name</label><input id="name" required maxlength="30"><button>Start playing</button></form>
+<section id="game" hidden><p id="score"></p><div id="emoji" aria-label="Emoji to guess"></div>
+<form id="guess"><fieldset id="choices"><legend>Choose a name</legend><div id="options"></div></fieldset><button id="submit">Check answer</button></form><button id="next" type="button" hidden>Next emoji</button></section>
+<p id="feedback" role="status"></p><h2>Top scores</h2><ol id="leaders"></ol><p id="board-status" role="status"></p></main></body></html>
