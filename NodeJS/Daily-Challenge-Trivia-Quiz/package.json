@@ -1,0 +1,17 @@
+{
+  "name": "daily-challenge-trivia-quiz",
+  "version": "1.0.0",
+  "description": "Run `npm ci`, then `npm start`, and open http://localhost:3000/quiz.",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^5.3.0"
+  },
+  "private": true
+}
