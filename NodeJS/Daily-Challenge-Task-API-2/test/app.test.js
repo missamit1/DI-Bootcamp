@@ -1,0 +1,95 @@
+const { test } = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs/promises');
+const path = require('node:path');
+const os = require('node:os');
+const request = require('supertest');
+const bcrypt = require('bcrypt');
+const { randomUUID } = require('node:crypto');
+const { JSDOM } = require('jsdom');
+const { createApp } = require('../app');
+test('API, password uniqueness, persistence and storage errors', async t => {
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'json-users-'));
+  t.after(() => fs.rm(dir, { recursive: true, force: true }));
+  const file = path.join(dir, 'users.json');
+  await fs.writeFile(file, '[]');
+  const app = createApp(file);
+  const data = { username: 'amit', password: 'secret', first_name: 'Amit', last_name: 'Ashkenazi', email: 'amit@example.com' };
+  const user = (await request(app).post('/register').send(data).expect(201)).body.user;
+  assert.equal(user.password, undefined);
+  const saved = JSON.parse(await fs.readFile(file, 'utf8'));
+  assert.equal(await bcrypt.compare(data.password, saved[0].password), true);
+  const before = await fs.readFile(file, 'utf8');
+  await request(app).post('/register').send({ ...data, password: 'different' }).expect(409);
+  await request(app).post('/register').send({ ...data, username: 'other' }).expect(409);
+  assert.equal(await fs.readFile(file, 'utf8'), before);
+  await request(app).post('/login').send({ username: 'amit', password: 'secret' }).expect(200);
+  await request(app).post('/login').send({ username: 'amit', password: 'wrong' }).expect(401);
+  await request(app).post('/login').send({ username: 'unknown', password: 'wrong' }).expect(401);
+  assert.equal((await request(app).get('/users').expect(200)).body[0].password, undefined);
+  await request(app).get('/users/' + user.id).expect(200);
+  await request(app).put('/users/' + user.id).send({ username: 'updated', password: 'new-secret' }).expect(200);
+  await request(app).post('/login').send({ username: 'updated', password: 'new-secret' }).expect(200);
+  await request(app).post('/login').send({ username: 'updated', password: 'secret' }).expect(401);
+  await request(app).put('/users/' + user.id).send({}).expect(400);
+  await request(app).post('/register').send({ username: 'bad', password: 'é'.repeat(37) }).expect(400);
+  await request(app).post('/register').send({ ...data, email: 'bad' }).expect(400);
+  await request(app).post('/register').set('Content-Type', 'application/json').send('{bad').expect(400);
+  await request(app).get('/users/bad').expect(400);
+  await request(app).get('/users/' + randomUUID()).expect(404);
+  await request(app).put('/users/' + randomUUID()).send({ first_name: 'X' }).expect(404);
+  await request(app).get('/users.json').expect(404);
+  await request(app).get('/register.html').expect(200);
+  await request(app).get('/login.html').expect(200);
+  assert.equal((await request(createApp(file)).get('/users').expect(200)).body[0].username, 'updated');
+  const concurrent = await Promise.all([1, 2].map(() => request(app).post('/register').send({ username: 'concurrent', password: 'other-secret' })));
+  assert.deepEqual(concurrent.map(r => r.status).sort(), [201, 409]);
+  await request(app).put('/users/' + user.id).send({ password: 'other-secret' }).expect(409);
+  await fs.writeFile(file, '{bad');
+  await request(app).get('/users').expect(500);
+  await request(app).post('/register').send(data).expect(500);
+  assert.equal(await fs.readFile(file, 'utf8'), '{bad');
+  await fs.unlink(file);
+  await request(app).get('/users').expect(500);
+  await fs.writeFile(file, '[]');
+  const original = fs.writeFile;
+  fs.writeFile = async (...args) => {
+    if (String(args[0]).endsWith('.tmp')) throw Object.assign(new Error('Denied'), { code: 'EACCES' });
+    return original(...args);
+  };
+  try {
+    await request(app).post('/register').send(data).expect(500);
+    assert.equal(await fs.readFile(file, 'utf8'), '[]');
+  } finally { fs.writeFile = original; }
+  await request(app).post('/register').send(data).expect(201);
+});
+
+for (const page of ['register', 'login']) {
+  test(page + ' form disables empty inputs and shows server feedback', async () => {
+    const html = await fs.readFile(path.join(__dirname, '../public', page + '.html'), 'utf8');
+    const dom = new JSDOM(html, { runScripts: 'outside-only', url: 'http://localhost/' + page + '.html' });
+    const { window } = dom;
+    const form = window.document.querySelector('form');
+    const button = form.querySelector('button');
+    const inputs = form.querySelectorAll('input');
+    assert.equal(inputs.length, page === 'register' ? 5 : 2);
+    let ok = false;
+    window.fetch = async () => ({ ok, json: async () => ok ? { message: 'Success' } : { error: 'Rejected' } });
+    window.eval(await fs.readFile(path.join(__dirname, '../public/form.js'), 'utf8'));
+    assert.equal(button.disabled, true);
+    for (const input of inputs) input.value = input.type === 'email' ? 'a@example.com' : 'value';
+    form.dispatchEvent(new window.Event('input', { bubbles: true }));
+    assert.equal(button.disabled, false);
+    form.dispatchEvent(new window.Event('submit', { cancelable: true }));
+    assert.equal(button.disabled, true);
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(window.document.getElementById('message').textContent, 'Rejected');
+    assert.equal(button.disabled, false);
+    ok = true;
+    form.dispatchEvent(new window.Event('submit', { cancelable: true }));
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(window.document.getElementById('message').textContent, 'Success');
+    assert.equal(button.disabled, true);
+    dom.window.close();
+  });
+}
