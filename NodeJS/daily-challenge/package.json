@@ -1,0 +1,18 @@
+{
+  "name": "daily-challenge",
+  "version": "1.0.0",
+  "description": "Node.js modules, Chalk and file reading daily challenge",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "challenge": "node challenge.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "chalk": "^4.1.2"
+  },
+  "private": true
+}
