@@ -1,0 +1,7 @@
+body { margin: 0; font-family: Arial, sans-serif; color: #202630; background: #f5f7fa; }
+main { max-width: 850px; margin: 32px auto; padding: 0 16px; }
+section { background: white; padding: 24px; margin-bottom: 24px; border-radius: 8px; }
+form { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+input, button { padding: 8px; font: inherit; }
+img { max-width: 100%; height: auto; }
+li { margin-bottom: 8px; }
