@@ -1,0 +1,18 @@
+<div id="posts">
+  <% if (error) { %>
+    <p class="alert alert-warning" role="alert"><%= error %></p>
+  <% } else if (searched && posts.length === 0) { %>
+    <p>No posts found.</p>
+  <% } %>
+  <% posts.forEach(post => { %>
+    <article class="post">
+      <h2><a href="<%= safeLink(post.link) %>" target="_blank" rel="noopener noreferrer"><%= post.title || "Untitled post" %></a></h2>
+      <p class="metadata">
+        Published: <%= post.pubDate || post.isoDate || "Not available" %><br>
+        Creator: <%= post.creator || post.author || "Unknown" %><br>
+        Category: <%= (post.categories || []).join(", ") || "Uncategorized" %>
+      </p>
+      <p class="content"><%= post["content:encodedSnippet"] || post.contentSnippet || post.content || "No content provided." %></p>
+    </article>
+  <% }); %>
+</div>

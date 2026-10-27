@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><%- include("../partials/head") %></head>
+<body>
+  <%- include("../partials/header") %>
+  <main>
+    <h1>Find your next fact</h1>
+    <form class="search-box" method="post" action="/search/title">
+      <label for="title">Search by title</label>
+      <input id="title" name="title" value="<%= title %>" required>
+      <button type="submit">Search title</button>
+    </form>
+    <form class="search-box" method="post" action="/search/category">
+      <label for="category">Search by category</label>
+      <select id="category" name="category" required>
+        <option value="">Choose a category</option>
+        <% categories.forEach(option => { %>
+          <option value="<%= option %>" <%= category === option ? "selected" : "" %>><%= option %></option>
+        <% }); %>
+      </select>
+      <button type="submit">Search category</button>
+    </form>
+    <%- include("../partials/posts") %>
+  </main>
+  <%- include("../partials/footer") %>
+</body>
+</html>
