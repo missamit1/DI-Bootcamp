@@ -1,0 +1,18 @@
+* { box-sizing: border-box; }
+body { margin: 0; font: 16px Arial, sans-serif; }
+.app { min-height: 100vh; padding: 36px 16px; }
+.app.light { background: #f1f5f9; color: #1e293b; color-scheme: light; }
+.app.dark { background: #0f172a; color: #f1f5f9; color-scheme: dark; }
+main { max-width: 720px; margin: auto; }
+h1 { font-size: 30px; margin-top: 0; }
+h2 { margin-top: 0; font-size: 22px; }
+.card { border: 1px solid; border-radius: 12px; padding: 24px; margin-top: 24px; }
+.card.light { background: #fff; border-color: #cbd5e1; }
+.card.dark { background: #1e293b; border-color: #64748b; }
+label { display: block; margin-bottom: 10px; }
+input { width: 100%; padding: 12px; font: inherit; border: 1px solid #64748b; border-radius: 6px; }
+.light input { background: #fff; color: #1e293b; }
+.dark input { background: #0f172a; color: #f1f5f9; }
+button { background: #1d4ed8; color: white; border: 0; border-radius: 6px; padding: 12px 18px; font: inherit; cursor: pointer; }
+.dark button { background: #93c5fd; color: #0f172a; }
+button:focus-visible, input:focus-visible { outline: 3px solid #e59416; outline-offset: 3px; }
