@@ -1,0 +1,10 @@
+* { box-sizing: border-box; } body { margin: 0; background: #f1f5f9; color: #203047; font: 16px Arial, sans-serif; }
+main { max-width: 850px; margin: 32px auto; padding: 24px; background: white; border-radius: 12px; }
+h1 { margin-top: 0; } button, input { font: inherit; padding: 10px; border-radius: 5px; } input { border: 1px solid #64748b; min-width: 0; }
+button { cursor: pointer; background: #2056af; color: white; border: 0; } button:focus-visible, input:focus-visible { outline: 3px solid #df9309; outline-offset: 2px; }
+.add-form { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; } .add-form label { width: 100%; } .add-form input { flex: 1; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; } .filters button { background: #e2e8f0; color: #203047; } .filters button[aria-pressed=true] { background: #2056af; color: white; }
+ul { list-style: none; padding: 0; } .task { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 14px 0; border-bottom: 1px solid #cbd5e1; }
+.task-text { flex: 1; text-align: left; overflow-wrap: anywhere; background: transparent; color: #203047; min-width: 100px; } .completed { text-decoration: line-through; color: #596579; }
+.edit-form { flex: 1; display: flex; flex-wrap: wrap; gap: 8px; } .edit-form input { flex: 1; width: 100%; } .delete { background: #a52e29; }
+@media (max-width: 600px) { main { margin: 12px; padding: 16px; } h1 { font-size: 26px; } }
