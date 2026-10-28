@@ -1,0 +1,8 @@
+* { box-sizing: border-box; } body { margin: 0; background: #e8f1fb; color: #18314d; font: 16px Arial, sans-serif; padding: 30px 16px; }
+main { max-width: 460px; margin: 30px auto; padding: 28px; background: white; border-radius: 14px; box-shadow: 0 8px 30px #18314d15; }
+h1 { font-size: 29px; margin-top: 0; } form { display: grid; gap: 10px; }
+input, select, button { min-width: 0; width: 100%; padding: 12px; font: inherit; border: 1px solid #8294a9; border-radius: 6px; }
+button { margin-top: 8px; background: #205cb7; color: white; cursor: pointer; border: 0; }
+input:focus-visible, select:focus-visible, button:focus-visible { outline: 3px solid #e29c25; outline-offset: 2px; }
+.result { margin-top: 24px; padding: 16px; background: #eef4fc; border-radius: 6px; overflow-wrap: anywhere; font-size: 20px; }
+.error { color: #a02222; }
