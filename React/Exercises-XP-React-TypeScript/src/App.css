@@ -1,0 +1,2 @@
+main { max-width: 960px; margin: 32px auto; padding: 0 16px; } header { text-align: center; } header img { width: 64px; height: 64px; margin: 10px; } h1 { font-size: 30px; } h2 { font-size: 22px; }
+section { padding: 24px; background: white; border-radius: 10px; margin-top: 20px; } .cards { display: flex; flex-wrap: wrap; gap: 16px; } .user-card { border: 1px solid #cbd5e1; padding: 16px; border-radius: 6px; flex: 1; min-width: 140px; } .users { padding-left: 20px; } .users li { padding: 8px 0; overflow-wrap: anywhere; } [role=alert] { color: #a02222; }
