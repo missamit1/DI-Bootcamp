@@ -1,0 +1,26 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { configureStore } from '@reduxjs/toolkit';
+import reducer, { addTodo, toggleTodo, removeTodo } from './todoSlice.js';
+test('store adds, toggles and removes todos without mutating old state', () => {
+  const store = configureStore({ reducer: { todos: reducer } });
+  const previous = store.getState();
+  store.dispatch(addTodo('  Learn Redux  '));
+  store.dispatch(addTodo('Write tests'));
+  const [first, second] = store.getState().todos.todos;
+  assert.equal(first.text, 'Learn Redux');
+  assert.notEqual(first.id, second.id);
+  assert.equal(previous.todos.todos.length, 0);
+  store.dispatch(addTodo('   '));
+  assert.equal(store.getState().todos.todos.length, 2);
+  store.dispatch(toggleTodo(first.id));
+  assert.equal(store.getState().todos.todos[0].completed, true);
+  assert.equal(first.completed, false);
+  store.dispatch(toggleTodo(first.id));
+  assert.equal(store.getState().todos.todos[0].completed, false);
+  store.dispatch(removeTodo(first.id));
+  assert.deepEqual(store.getState().todos.todos, [second]);
+  store.dispatch(toggleTodo('missing'));
+  store.dispatch(removeTodo('missing'));
+  assert.deepEqual(store.getState().todos.todos, [second]);
+});
