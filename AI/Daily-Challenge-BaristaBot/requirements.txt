@@ -1,0 +1,4 @@
+langgraph==1.0.5
+langchain-google-genai==4.1.2
+google-genai==1.56.0
+langgraph-prebuilt==1.0.5
