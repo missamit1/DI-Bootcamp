@@ -1,0 +1,7 @@
+* { box-sizing: border-box; } body { margin: 0; padding: 24px 16px; background: #eef3f9; color: #203148; font: 16px Arial, sans-serif; }
+main { max-width: 850px; margin: auto; background: white; padding: 28px; border-radius: 12px; } h1 { margin-top: 0; } h2 { font-size: 22px; }
+label { display: block; margin: 12px 0 8px; } input, button { font: inherit; padding: 10px; border-radius: 5px; } input { border: 1px solid #72859e; min-width: 0; }
+button { background: #225ab2; color: white; border: 0; cursor: pointer; } button:disabled { opacity: .5; cursor: default; }
+.row, .edit-form { display: flex; flex-wrap: wrap; gap: 10px; } .row input, .edit-form input { flex: 1; } .edit-form { flex: 1; }
+ul { padding: 0; list-style: none; } li { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 14px 0; border-bottom: 1px solid #cbd5e1; } .task-text { flex: 1; min-width: 100px; overflow-wrap: anywhere; } .delete { background: #a42f2b; }
+button:focus-visible, input:focus-visible { outline: 3px solid #d79120; outline-offset: 2px; }

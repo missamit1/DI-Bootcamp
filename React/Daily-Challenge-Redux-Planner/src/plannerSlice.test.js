@@ -1,0 +1,24 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { configureStore } from '@reduxjs/toolkit';
+import planner, { addTask, editTask, deleteTask, selectDay } from './plannerSlice.js';
+test('day-specific CRUD preserves other days and previous state', () => {
+  const store = configureStore({ reducer: { planner } });
+  const original = store.getState();
+  store.dispatch(addTask({ day: '2026-10-29', text: 'First day' }));
+  store.dispatch(addTask({ day: '2026-10-30', text: 'Second day' }));
+  const task = store.getState().planner.tasksByDay['2026-10-29'][0];
+  store.dispatch(editTask({ day: '2026-10-30', id: task.id, text: 'Wrong day' }));
+  store.dispatch(editTask({ day: '2026-10-29', id: task.id, text: 'Updated' }));
+  assert.equal(store.getState().planner.tasksByDay['2026-10-29'][0].text, 'Updated');
+  assert.equal(store.getState().planner.tasksByDay['2026-10-30'][0].text, 'Second day');
+  assert.equal(task.text, 'First day');
+  store.dispatch(selectDay('2026-10-30'));
+  store.dispatch(selectDay('2026-02-30'));
+  assert.equal(store.getState().planner.selectedDay, '2026-10-30');
+  store.dispatch(addTask({ day: '2026-10-30', text: '  ' }));
+  store.dispatch(deleteTask({ day: '2026-10-29', id: task.id }));
+  assert.equal(store.getState().planner.tasksByDay['2026-10-29'].length, 0);
+  assert.equal(store.getState().planner.tasksByDay['2026-10-30'].length, 1);
+  assert.deepEqual(original.planner.tasksByDay, {});
+});
